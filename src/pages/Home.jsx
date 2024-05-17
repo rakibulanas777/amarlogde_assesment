@@ -51,7 +51,7 @@ const Home = () => {
                             className='bg-gray-200 focus:outline-0 rounded-sm py-3 px-4'
                             placeholder='Last row seats'
                             value={lastRowSeats}
-                            onChange={(e) => setLastRowSeats(e.target.value)}
+                            onChange={(e) => setLastRowSeats(Number(e.target.value))}
                         />
                         <input
                             type="text"
@@ -89,7 +89,7 @@ const Home = () => {
                             className='bg-gray-200 focus:outline-0 rounded-sm py-3 px-4'
                             onChange={(e) => setDriver(e.target.value)}
                         >
-                            <option value="">Select Transport Type</option>
+                            <option value="">Select Driver</option>
                             <option value="left">Left</option>
                             <option value="right">Right</option>
                             <option value="noDriver">No Driver</option>
@@ -112,7 +112,17 @@ const Home = () => {
                             }
                         </div>
                         {data.slice(0, seatRow * 4).reduce((groups, item, index) => {
-                            const groupIndex = Math.floor(index / seatColumns);
+                            let groupIndex;
+                            if (index < firstRowSeats) {
+                                groupIndex = Math.floor(index / firstRowSeats);
+                            }
+                            else if (index >= seatRow * 4 - 7) {
+                                groupIndex = Math.floor((index - (seatRow * 4 - lastRowSeats)) / lastRowSeats) + Math.ceil(seatRow * 4 / seatColumns);
+                            }
+                            else {
+                                groupIndex = Math.floor((index - firstRowSeats) / seatColumns) + 1;
+                            }
+
                             if (!groups[groupIndex]) groups[groupIndex] = [];
                             groups[groupIndex].push(
                                 <button
@@ -128,6 +138,8 @@ const Home = () => {
                                 {group}
                             </div>
                         ))}
+
+
                     </div>
                 </div>
             </div>
